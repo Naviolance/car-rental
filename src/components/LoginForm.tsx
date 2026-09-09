@@ -85,6 +85,9 @@ export function LoginForm({
           />
         </label>
         <PasswordField name="password" />
+        <Link href="/forgot-password" className="self-end text-sm text-gray-500 underline">
+          Forgot password?
+        </Link>
         <SubmitButton
           pendingText="Signing in…"
           className="rounded bg-ember px-3 py-2 text-charcoal transition-colors hover:bg-rust hover:text-white"
