@@ -5,7 +5,7 @@ import Link from "next/link";
 import { motion, type Variants } from "motion/react";
 import { CalendarBlank } from "@phosphor-icons/react";
 import { CarCategory } from "@/generated/prisma/enums";
-import { inputClassName } from "@/lib/formStyles";
+import { inputClassName, datePlaceholderClassName } from "@/lib/formStyles";
 import { toDateString } from "@/lib/dateOnly";
 import { Dropdown } from "@/components/Dropdown";
 
@@ -45,16 +45,6 @@ const CATEGORY_OPTIONS = [
   { value: "", label: "Any" },
   ...Object.values(CarCategory).map((value) => ({ value, label: value })),
 ];
-
-// Empty date inputs render "dd/mm/yyyy" in the same dark text color as a
-// real value, which makes an untouched field look filled in — this is
-// what actually makes it "blend with the field" as a muted placeholder
-// instead. WebKit is the only engine that exposes these segments as
-// individually stylable pseudo-elements, and marks an unset segment
-// :invalid, which is what lets this target only the placeholder state
-// and not text the user actually typed.
-const datePlaceholderClassName =
-  "[&::-webkit-datetime-edit-day-field:invalid]:text-gray-400 [&::-webkit-datetime-edit-month-field:invalid]:text-gray-400 [&::-webkit-datetime-edit-year-field:invalid]:text-gray-400 [&::-webkit-datetime-edit-text]:text-gray-400";
 
 // A date's paired time dropdown only needs past slots disabled when that
 // date is today — any other date has no relationship to the clock at

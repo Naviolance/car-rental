@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/style.css";
 import { CalendarBlank } from "@phosphor-icons/react";
-import { inputClassName } from "@/lib/formStyles";
+import { inputClassName, datePlaceholderClassName } from "@/lib/formStyles";
 import { fromDateString, toDateString } from "@/lib/dateOnly";
 
 export function startOfToday(): Date {
@@ -97,7 +97,7 @@ export function DateRangePicker({
               min={todayString}
               value={startDate}
               onChange={(e) => handleNativeDateChange(e.target.value)}
-              className={`w-full pr-9 [&::-webkit-calendar-picker-indicator]:opacity-0 ${inputClassName}`}
+              className={`w-full pr-9 [&::-webkit-calendar-picker-indicator]:opacity-0 ${datePlaceholderClassName} ${inputClassName}`}
             />
             <button
               type="button"
