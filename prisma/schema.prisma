@@ -1,0 +1,191 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── Auth.js (NextAuth) adapter tables ──────────────────────────────────
+// This shape (User/Account/Session/VerificationToken) is dictated by the
+// @auth/prisma-adapter package, not something we're free to redesign —
+// Auth.js reads and writes these tables directly.
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  // Only set for users who sign up with email+password. OAuth-only users
+  // (Google) never get a password, hence optional.
+  password      String?
+  role          Role      @default(CUSTOMER)
+
+  accounts Account[]
+  sessions Session[]
+  bookings Booking[]
+  reviews  Review[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+enum Role {
+  CUSTOMER
+  ADMIN
+}
+
+// ─── Core domain: cars and bookings ─────────────────────────────────────
+
+model Car {
+  id           String         @id @default(cuid())
+  make         String
+  model        String
+  year         Int
+  category     CarCategory
+  transmission Transmission
+  fuelType     FuelType
+  seats        Int
+  // Decimal, not Float — floating point can't represent money exactly
+  // (0.1 + 0.2 !== 0.3), which is unacceptable for prices even without
+  // real payments.
+  pricePerDay  Decimal        @db.Decimal(10, 2)
+  imageUrl     String
+  location     String
+  description  String?
+  // A short paragraph on the model's history/heritage, shown on its
+  // detail page — this is what makes a listing page feel like more than
+  // a spec sheet.
+  history      String?
+  // Soft delete: an archived car is hidden from public listings but kept
+  // around, since a hard delete is blocked anyway once it has bookings
+  // (see Booking.car's onDelete: Restrict) — this makes that the normal
+  // path instead of an edge case admins would hit as an error.
+  isActive     Boolean        @default(true)
+
+  bookings  Booking[]
+  reviews   Review[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  // Speeds up the "is this car free between these two dates?" query,
+  // which every booking attempt has to run.
+  @@index([id, category])
+}
+
+enum CarCategory {
+  ECONOMY
+  COMPACT
+  SUV
+  LUXURY
+  VAN
+}
+
+enum Transmission {
+  AUTOMATIC
+  MANUAL
+}
+
+enum FuelType {
+  PETROL
+  DIESEL
+  ELECTRIC
+  HYBRID
+}
+
+model Booking {
+  id     String @id @default(cuid())
+  carId  String
+  userId String
+
+  startDate DateTime
+  endDate   DateTime
+  // Computed once at booking time from car.pricePerDay × days, then
+  // stored — not recalculated later. If the car's daily rate changes
+  // next month, this booking's price shouldn't retroactively change.
+  totalPrice Decimal       @db.Decimal(10, 2)
+  status     BookingStatus @default(PENDING)
+
+  // Restrict: a car with existing bookings can't be deleted outright,
+  // preserving booking history. Cars get archived, not deleted.
+  car Car @relation(fields: [carId], references: [id], onDelete: Restrict)
+  // Cascade: if a user account is deleted, their bookings go with it.
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  review Review?
+
+  @@index([carId, startDate, endDate])
+  @@index([userId])
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+model Review {
+  id        String @id @default(cuid())
+  bookingId String @unique
+  // Denormalized from booking.carId/userId at creation time — a booking's
+  // car and user never change afterward, so this is safe, and it's what
+  // lets "average rating for this car" be a direct groupBy on Review
+  // instead of a join through Booking that Prisma can't express in one
+  // aggregate query.
+  carId     String
+  userId    String
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  car     Car     @relation(fields: [carId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([carId])
+}

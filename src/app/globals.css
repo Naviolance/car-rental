@@ -1,26 +1,44 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* "Mindful Palettes No. 96" (Alex Cristache) — named for what each swatch
+   actually looks like, not forced into a fake 50-950 numeric scale with
+   invented in-between shades that aren't really in the source palette. */
+@theme {
+  --color-cream: #f3f4f5;
+  --color-mist: #dbe0e1;
+  --color-ember: #ff9408;
+  --color-rust: #ca3f16;
+  --color-maroon: #95122c;
+  --color-charcoal: #100c08;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-cream);
+  color: var(--color-charcoal);
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Anchor jumps (the WhyBookSection cards, "Learn more") snap to their
+   target instantly by default — this eases that into a scroll instead.
+   Scoped to no-preference, not set unconditionally, so anyone whose OS
+   is set to reduce motion still gets an instant jump. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* react-day-picker ships with a hardcoded blue accent (--rdp-accent-color:
+   blue) that has nothing to do with any theme — every consumer is expected
+   to override it. Retheming to rust keeps the date picker from reading as
+   an unstyled third-party widget dropped into an otherwise warm palette.
+   The doubled selector isn't a typo: react-day-picker's own style.css
+   defines these same variables on the same .rdp-root class, and it's
+   imported from DateRangePicker.tsx (a leaf component) so it ends up
+   later in the bundle than this file — later + equal specificity would
+   otherwise win. Repeating the class matches the same element while
+   counting as higher specificity, without reaching for !important. */
+.rdp-root.rdp-root {
+  --rdp-accent-color: var(--color-rust);
+  --rdp-accent-background-color: #f7e4da;
 }
