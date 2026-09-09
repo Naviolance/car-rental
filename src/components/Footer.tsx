@@ -30,6 +30,9 @@ export async function Footer() {
           <Link href="/cars" className="hover:text-ember">
             Browse cars
           </Link>
+          <Link href="/about" className="hover:text-ember">
+            About
+          </Link>
           {/* Same reasoning as Nav: an admin isn't renting cars, so
               "My bookings" has nothing for them — omitted rather than
               shown to an audience it doesn't apply to. */}

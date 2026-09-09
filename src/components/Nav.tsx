@@ -19,6 +19,9 @@ export async function Nav() {
       </Link>
 
       <nav className="flex flex-wrap items-center gap-4 text-sm">
+        <Link href="/about" className="hover:text-ember">
+          About
+        </Link>
         {session?.user ? (
           <>
             {/* An admin isn't renting cars themselves, so "My bookings"

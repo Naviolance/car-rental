@@ -2,10 +2,10 @@
 
 import { useRef } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { CalendarBlank } from "@phosphor-icons/react";
 import { CarCategory, Transmission, FuelType } from "@/generated/prisma/enums";
-import { inputClassName, datePlaceholderClassName } from "@/lib/formStyles";
+import { inputClassName } from "@/lib/formStyles";
 import { Select } from "./Select";
+import { CompactDateField } from "./CompactDateField";
 
 // Client Component only for the controls themselves — the actual query
 // still happens server-side in CarsPage, re-reading searchParams on every
@@ -17,8 +17,6 @@ export function CarFilters() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const pickupRef = useRef<HTMLInputElement>(null);
-  const returnRef = useRef<HTMLInputElement>(null);
 
   function navigate(params: URLSearchParams) {
     // replace, not push — tweaking a filter shouldn't fill up browser
@@ -115,48 +113,17 @@ export function CarFilters() {
             visual weight as a real date-of-booking picker. Matches the
             other filters here: one compact control each, no extra
             interaction to reveal them. */}
-        <label className="flex flex-col gap-1 text-sm">
-          Pick-up date
-          <div className="relative">
-            <input
-              ref={pickupRef}
-              type="date"
-              value={startDate}
-              onChange={(e) => setParam("startDate", e.target.value)}
-              className={`w-full pr-9 [&::-webkit-calendar-picker-indicator]:opacity-0 ${datePlaceholderClassName} ${inputClassName}`}
-            />
-            <button
-              type="button"
-              onClick={() => pickupRef.current?.showPicker?.()}
-              aria-label="Open pick-up date calendar"
-              className="absolute inset-y-0 right-0 flex items-center px-2.5 text-gray-400 hover:text-rust"
-            >
-              <CalendarBlank size={16} aria-hidden="true" />
-            </button>
-          </div>
-        </label>
-
-        <label className="flex flex-col gap-1 text-sm">
-          Return date
-          <div className="relative">
-            <input
-              ref={returnRef}
-              type="date"
-              min={startDate || undefined}
-              value={endDate}
-              onChange={(e) => setParam("endDate", e.target.value)}
-              className={`w-full pr-9 [&::-webkit-calendar-picker-indicator]:opacity-0 ${datePlaceholderClassName} ${inputClassName}`}
-            />
-            <button
-              type="button"
-              onClick={() => returnRef.current?.showPicker?.()}
-              aria-label="Open return date calendar"
-              className="absolute inset-y-0 right-0 flex items-center px-2.5 text-gray-400 hover:text-rust"
-            >
-              <CalendarBlank size={16} aria-hidden="true" />
-            </button>
-          </div>
-        </label>
+        <CompactDateField
+          label="Pick-up date"
+          value={startDate}
+          onChange={(value) => setParam("startDate", value)}
+        />
+        <CompactDateField
+          label="Return date"
+          value={endDate}
+          min={startDate || undefined}
+          onChange={(value) => setParam("endDate", value)}
+        />
 
         <button
           type="button"

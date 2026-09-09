@@ -4,10 +4,8 @@ import { CaretLeft } from "@phosphor-icons/react/dist/ssr";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
 import { BookingSteps } from "@/components/BookingSteps";
-import { BookingForm } from "@/components/BookingForm";
-import { DateRangeField } from "@/components/DateRangeField";
+import { BookingSection } from "@/components/BookingSection";
 import { parseDateRange } from "@/lib/dateRangeParams";
-import { toDateString } from "@/lib/dateOnly";
 import { starString } from "@/lib/rating";
 
 export default async function CarDetailPage({
@@ -111,6 +109,29 @@ export default async function CarDetailPage({
         <p className="text-gray-700">{car.description}</p>
       )}
 
+      {/* Picking dates never requires being signed in — only the final
+          submit does, so anyone landing here directly (browsing /cars, a
+          shared link, wherever) can set dates right here instead of
+          hitting a dead end. Placed right after the price/tags, ahead of
+          the history and reviews reading material — this is the one
+          thing on the page someone actually books through, so it
+          shouldn't be the last thing they scroll to. */}
+      <BookingSection
+        carId={car.id}
+        pricePerDay={Number(car.pricePerDay)}
+        isSignedIn={Boolean(session?.user)}
+        isValid={dateRange.isValid}
+        days={bookingDays}
+        startDateValue={startDate ?? ""}
+        endDateValue={endDate ?? ""}
+        startDateLabel={
+          dateRange.isValid ? dateRange.startDate.toLocaleDateString() : ""
+        }
+        endDateLabel={
+          dateRange.isValid ? dateRange.endDate.toLocaleDateString() : ""
+        }
+      />
+
       {car.history && (
         <div className="flex flex-col gap-2 border-t border-mist pt-6">
           <h2 className="text-lg font-semibold">
@@ -157,57 +178,6 @@ export default async function CarDetailPage({
               </div>
             ))}
           </div>
-        </div>
-      )}
-
-      {/* Picking dates never requires being signed in — only the final
-          submit does. This is the fix for the wizard being the *only*
-          place a date range could be set: anyone landing here directly
-          (browsing /cars, a shared link, wherever) can set dates right
-          here instead of hitting a dead end. */}
-      {!dateRange.isValid && (
-        <div className="flex flex-col gap-2 rounded border border-mist p-4">
-          <p className="text-sm text-gray-600">
-            Pick your dates to book this car.
-          </p>
-          <DateRangeField />
-        </div>
-      )}
-
-      {/* The "Confirm" step of BookingSteps lands here — matching the
-          pick-dates card above in border/padding gives this the same
-          visual weight as an actionable step, not just trailing text
-          after the reviews. The total shown here is what "Why book with
-          us" promises ("the total is calculated up front, no
-          surprises"): without it, confirming meant doing rate × days
-          yourself, which is exactly the surprise-math that line claims
-          doesn't happen. */}
-      {dateRange.isValid && (
-        <div className="flex flex-col gap-3 rounded border border-mist p-4">
-          <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-sm">
-            <span className="text-gray-600">
-              {dateRange.startDate.toLocaleDateString()} –{" "}
-              {dateRange.endDate.toLocaleDateString()} ({bookingDays} days)
-            </span>
-            <span className="font-semibold">
-              ${(Number(car.pricePerDay) * bookingDays).toFixed(2)} total
-            </span>
-          </div>
-
-          {session?.user ? (
-            <BookingForm
-              carId={car.id}
-              startDate={toDateString(dateRange.startDate)}
-              endDate={toDateString(dateRange.endDate)}
-            />
-          ) : (
-            <Link
-              href="/login"
-              className="rounded bg-ember px-4 py-2 text-center text-charcoal transition-colors hover:bg-rust hover:text-white"
-            >
-              Sign in to book this car
-            </Link>
-          )}
         </div>
       )}
     </div>
