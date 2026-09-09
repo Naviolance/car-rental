@@ -8,7 +8,7 @@ import { parsePage, totalPagesFor, PAGE_SIZE } from "@/lib/pagination";
 import { Pagination } from "@/components/Pagination";
 import { ReviewForm } from "@/components/ReviewForm";
 import { EmptyState } from "@/components/EmptyState";
-import { starString } from "@/lib/rating";
+import { StarRating } from "@/components/StarRating";
 
 const STATUS_STYLES: Record<BookingStatus, string> = {
   PENDING: "bg-yellow-100 text-yellow-800",
@@ -116,7 +116,7 @@ export default async function BookingsPage({
                 {booking.review ? (
                   <p className="border-t border-mist pt-3 text-sm">
                     <span className="text-rust">
-                      {starString(booking.review.rating)}
+                      <StarRating rating={booking.review.rating} />
                     </span>{" "}
                     {booking.review.comment && (
                       <span className="text-gray-600">

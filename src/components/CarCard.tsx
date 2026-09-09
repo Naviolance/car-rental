@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { motion } from "motion/react";
 import type { Car } from "@/generated/prisma/client";
-import { starString } from "@/lib/rating";
+import { StarRating } from "@/components/StarRating";
 
 export function CarCard({
   car,
@@ -57,7 +57,7 @@ export function CarCard({
           </div>
           {Boolean(reviewCount) && avgRating !== undefined && (
             <p className="text-xs text-rust">
-              {starString(avgRating)}{" "}
+              <StarRating rating={avgRating} />{" "}
               <span className="text-gray-500">({reviewCount})</span>
             </p>
           )}

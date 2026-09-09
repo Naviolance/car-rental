@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/style.css";
 import { CalendarBlank } from "@phosphor-icons/react";
@@ -32,6 +32,7 @@ export function DateRangePicker({
 }) {
   const [dateError, setDateError] = useState<string | null>(null);
   const dateInputRef = useRef<HTMLInputElement>(null);
+  const errorId = useId();
   const today = startOfToday();
   const todayString = toDateString(today);
 
@@ -97,6 +98,8 @@ export function DateRangePicker({
               min={todayString}
               value={startDate}
               onChange={(e) => handleNativeDateChange(e.target.value)}
+              aria-invalid={Boolean(dateError)}
+              aria-describedby={dateError ? errorId : undefined}
               className={`w-full pr-9 [&::-webkit-calendar-picker-indicator]:opacity-0 ${datePlaceholderClassName} ${inputClassName}`}
             />
             <button
@@ -121,7 +124,11 @@ export function DateRangePicker({
         </label>
       </div>
 
-      {dateError && <p className="text-sm text-red-600">{dateError}</p>}
+      {dateError && (
+        <p id={errorId} role="alert" className="text-sm text-red-600">
+          {dateError}
+        </p>
+      )}
 
       <div className="flex justify-center rounded border border-mist p-2">
         <DayPicker

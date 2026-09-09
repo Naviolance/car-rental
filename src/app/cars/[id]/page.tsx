@@ -6,7 +6,7 @@ import { auth } from "@/auth";
 import { BookingSteps } from "@/components/BookingSteps";
 import { BookingSection } from "@/components/BookingSection";
 import { parseDateRange } from "@/lib/dateRangeParams";
-import { starString } from "@/lib/rating";
+import { StarRating } from "@/components/StarRating";
 
 export default async function CarDetailPage({
   params,
@@ -81,7 +81,7 @@ export default async function CarDetailPage({
           </p>
           {avgRating !== null && (
             <p className="text-sm text-rust">
-              {starString(avgRating)}{" "}
+              <StarRating rating={avgRating} />{" "}
               <span className="text-gray-500">
                 ({reviews.length} review{reviews.length === 1 ? "" : "s"})
               </span>
@@ -165,7 +165,7 @@ export default async function CarDetailPage({
                       {review.user.name ?? "A customer"}
                     </span>
                     <span className="text-rust">
-                      {starString(review.rating)}
+                      <StarRating rating={review.rating} />
                     </span>
                   </div>
                   <p className="text-xs text-gray-500">

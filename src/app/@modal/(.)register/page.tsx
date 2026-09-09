@@ -13,7 +13,7 @@ export default function InterceptedRegisterModal() {
   const back = () => router.back();
 
   return (
-    <Modal onClose={back}>
+    <Modal title="Create an account" onClose={back}>
       <RegisterForm onSuccess={back} />
     </Modal>
   );

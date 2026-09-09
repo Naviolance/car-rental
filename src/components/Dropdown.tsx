@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { CaretDown, Check } from "@phosphor-icons/react";
 import { inputClassName } from "@/lib/formStyles";
@@ -41,6 +41,8 @@ export function Dropdown({
   const [highlighted, setHighlighted] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
+  const idPrefix = useId();
+  const optionId = (index: number) => `${idPrefix}-option-${index}`;
 
   const selectedIndex = options.findIndex((option) => option.value === value);
   const selected = selectedIndex >= 0 ? options[selectedIndex] : null;
@@ -90,8 +92,21 @@ export function Dropdown({
     });
   }
 
+  // A native <select> jumps to the first/last option on Home/End —
+  // scanning forward/backward for the nearest enabled one keeps that
+  // working the same way ours does for Arrow keys, skipping disabled
+  // options (e.g. past time slots) rather than landing on one.
+  function moveToEdge(edge: "first" | "last") {
+    const range =
+      edge === "first"
+        ? options.map((_, index) => index)
+        : options.map((_, index) => index).reverse();
+    const target = range.find((index) => !options[index]?.disabled);
+    if (target !== undefined) setHighlighted(target);
+  }
+
   function handleButtonKeyDown(event: React.KeyboardEvent) {
-    if (["ArrowDown", "ArrowUp", "Enter", " "].includes(event.key)) {
+    if (["ArrowDown", "ArrowUp", "Home", "End", "Enter", " "].includes(event.key)) {
       event.preventDefault();
       if (!open) {
         openDropdown();
@@ -99,6 +114,10 @@ export function Dropdown({
         moveHighlight(1);
       } else if (event.key === "ArrowUp") {
         moveHighlight(-1);
+      } else if (event.key === "Home") {
+        moveToEdge("first");
+      } else if (event.key === "End") {
+        moveToEdge("last");
       } else {
         commit(highlighted);
       }
@@ -114,12 +133,15 @@ export function Dropdown({
         type="button"
         onClick={() => (open ? setOpen(false) : openDropdown())}
         onKeyDown={handleButtonKeyDown}
+        role="combobox"
         aria-haspopup="listbox"
         aria-expanded={open}
+        aria-controls={open ? `${idPrefix}-listbox` : undefined}
+        aria-activedescendant={open ? optionId(highlighted) : undefined}
         aria-label={ariaLabel}
         className={`flex w-full items-center justify-between gap-2 text-left ${inputClassName}`}
       >
-        <span className={`truncate ${selected ? "" : "text-gray-400"}`}>
+        <span className={`truncate ${selected ? "" : "text-gray-500"}`}>
           {selected ? selected.label : placeholder}
         </span>
         <CaretDown
@@ -132,6 +154,7 @@ export function Dropdown({
         {open && (
           <motion.ul
             ref={listRef}
+            id={`${idPrefix}-listbox`}
             role="listbox"
             aria-label={ariaLabel}
             initial={{ opacity: 0, y: -6, scale: 0.98 }}
@@ -143,6 +166,7 @@ export function Dropdown({
             {options.map((option, index) => (
               <li
                 key={option.value}
+                id={optionId(index)}
                 data-index={index}
                 role="option"
                 aria-selected={option.value === value}

@@ -15,7 +15,7 @@ export default async function LoginPage({
   const { error } = await searchParams;
 
   return (
-    <Modal>
+    <Modal title="Sign in">
       <LoginForm error={error} />
     </Modal>
   );

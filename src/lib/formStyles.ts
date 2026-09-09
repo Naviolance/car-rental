@@ -12,6 +12,8 @@ export const inputClassName =
 // instead. WebKit is the only engine that exposes these segments as
 // individually stylable pseudo-elements, and marks an unset segment
 // :invalid, which is what lets this target only the placeholder state
-// and not text the user actually typed.
+// and not text the user actually typed. gray-500, not gray-400: -400
+// on white computes to ~2.5:1, under the 4.5:1 AA minimum for text —
+// -500 clears it at ~4.9:1 while still reading as visibly muted.
 export const datePlaceholderClassName =
-  "[&::-webkit-datetime-edit-day-field:invalid]:text-gray-400 [&::-webkit-datetime-edit-month-field:invalid]:text-gray-400 [&::-webkit-datetime-edit-year-field:invalid]:text-gray-400 [&::-webkit-datetime-edit-text]:text-gray-400";
+  "[&::-webkit-datetime-edit-day-field:invalid]:text-gray-500 [&::-webkit-datetime-edit-month-field:invalid]:text-gray-500 [&::-webkit-datetime-edit-year-field:invalid]:text-gray-500 [&::-webkit-datetime-edit-text]:text-gray-500";

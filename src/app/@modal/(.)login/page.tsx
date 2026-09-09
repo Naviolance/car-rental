@@ -21,7 +21,7 @@ export default function InterceptedLoginModal() {
   const back = () => router.back();
 
   return (
-    <Modal onClose={back}>
+    <Modal title="Sign in" onClose={back}>
       <LoginForm error={error} onSuccess={back} />
     </Modal>
   );

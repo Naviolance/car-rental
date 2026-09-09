@@ -8,7 +8,7 @@ import { RegisterForm } from "@/components/RegisterForm";
 // app/@modal/(.)register/page.tsx overlays this same content instead.
 export default function RegisterPage() {
   return (
-    <Modal>
+    <Modal title="Create an account">
       <RegisterForm />
     </Modal>
   );

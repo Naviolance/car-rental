@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
+import { MotionConfig, motion } from "motion/react";
 import { Lightning, CheckCircle, Tag, Car } from "@phosphor-icons/react";
 
 const features = [
@@ -58,6 +58,7 @@ function scrollToSlug(event: React.MouseEvent, slug: string) {
 
 export function WhyBookSection() {
   return (
+    <MotionConfig reducedMotion="user">
     <section className="px-6">
       <h2 className="text-center text-xl font-semibold">Why book with us</h2>
       {/* A horizontally scrollable strip, not a wrapping grid — the cards
@@ -116,5 +117,6 @@ export function WhyBookSection() {
         ))}
       </div>
     </section>
+    </MotionConfig>
   );
 }

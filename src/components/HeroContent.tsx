@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import Link from "next/link";
-import { motion, type Variants } from "motion/react";
+import { MotionConfig, motion, type Variants } from "motion/react";
 import { CalendarBlank } from "@phosphor-icons/react";
 import { CarCategory } from "@/generated/prisma/enums";
 import { inputClassName, datePlaceholderClassName } from "@/lib/formStyles";
@@ -103,6 +103,7 @@ export function HeroContent() {
   }
 
   return (
+    <MotionConfig reducedMotion="user">
     <motion.div
       initial="hidden"
       animate="show"
@@ -242,5 +243,6 @@ export function HeroContent() {
         </Link>
       </motion.div>
     </motion.div>
+    </MotionConfig>
   );
 }

@@ -51,13 +51,13 @@ export function RegisterForm({ onSuccess }: { onSuccess?: () => void }) {
       <h1 className="text-2xl font-semibold">Create an account</h1>
 
       {state.status === "error" && (
-        <p className="rounded bg-red-50 px-3 py-2 text-sm text-red-700">
+        <p role="alert" className="rounded bg-red-50 px-3 py-2 text-sm text-red-700">
           {state.message}
         </p>
       )}
 
       {state.status === "leaked" && (
-        <p className="rounded bg-yellow-50 px-3 py-2 text-sm text-yellow-800">
+        <p role="alert" className="rounded bg-yellow-50 px-3 py-2 text-sm text-yellow-800">
           This password has appeared in {state.count.toLocaleString()} known
           data breaches. We&apos;d recommend a different one — but it&apos;s
           your call.
