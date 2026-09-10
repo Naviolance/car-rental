@@ -54,7 +54,7 @@ export function BookingSection({
         Book this car
       </h2>
 
-      <div className="flex flex-wrap items-end gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
         <CompactDateField
           label="Pick-up date"
           value={startDateValue}

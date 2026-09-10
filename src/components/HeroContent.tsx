@@ -145,7 +145,7 @@ export function HeroContent() {
               custom calendar to build or maintain) but makes clicking
               it the obvious, single interaction instead of stumbling
               into segment-editing mode. */}
-          <div className="flex gap-2">
+          <div className="flex flex-col gap-2 sm:flex-row">
             <div className="relative min-w-0 flex-1">
               <input
                 ref={pickupRef}
@@ -171,13 +171,13 @@ export function HeroContent() {
               options={timeOptionsFor(pickupDate)}
               value={pickupTime}
               onChange={setPickupTime}
-              className="w-28"
+              className="w-full sm:w-28"
             />
           </div>
         </div>
         <div className="flex flex-col gap-1 text-sm">
           Return
-          <div className="flex gap-2">
+          <div className="flex flex-col gap-2 sm:flex-row">
             <div className="relative min-w-0 flex-1">
               <input
                 ref={returnRef}
@@ -203,7 +203,7 @@ export function HeroContent() {
               options={timeOptionsFor(returnDate)}
               value={returnTime}
               onChange={setReturnTime}
-              className="w-28"
+              className="w-full sm:w-28"
             />
           </div>
         </div>
