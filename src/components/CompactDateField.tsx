@@ -14,16 +14,18 @@ export function CompactDateField({
   value,
   onChange,
   min,
+  className = "",
 }: {
   label: string;
   value: string;
   onChange: (value: string) => void;
   min?: string;
+  className?: string;
 }) {
   const ref = useRef<HTMLInputElement>(null);
 
   return (
-    <label className="flex min-w-0 flex-col gap-1 text-sm">
+    <label className={`flex min-w-0 flex-col gap-1 text-sm ${className}`}>
       {label}
       <div className="relative min-w-0">
         <input

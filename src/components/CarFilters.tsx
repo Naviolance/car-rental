@@ -48,8 +48,8 @@ export function CarFilters() {
 
   return (
     <div className="flex flex-col gap-4 rounded-lg border border-mist p-4">
-      <div className="flex flex-wrap items-end gap-4">
-        <label className="flex flex-col gap-1 text-sm">
+      <div className="flex flex-col items-stretch gap-4 sm:flex-row sm:flex-wrap sm:items-end">
+        <label className="flex w-full flex-col gap-1 text-sm sm:w-auto">
           Category
           <Select
             defaultValue={searchParams.get("category") ?? ""}
@@ -64,7 +64,7 @@ export function CarFilters() {
           </Select>
         </label>
 
-        <label className="flex flex-col gap-1 text-sm">
+        <label className="flex w-full flex-col gap-1 text-sm sm:w-auto">
           Transmission
           <Select
             defaultValue={searchParams.get("transmission") ?? ""}
@@ -79,7 +79,7 @@ export function CarFilters() {
           </Select>
         </label>
 
-        <label className="flex flex-col gap-1 text-sm">
+        <label className="flex w-full flex-col gap-1 text-sm sm:w-auto">
           Fuel type
           <Select
             defaultValue={searchParams.get("fuelType") ?? ""}
@@ -94,7 +94,7 @@ export function CarFilters() {
           </Select>
         </label>
 
-        <label className="flex flex-col gap-1 text-sm">
+        <label className="flex w-full flex-col gap-1 text-sm sm:w-auto">
           Max price / day
           <input
             type="number"
@@ -102,7 +102,7 @@ export function CarFilters() {
             defaultValue={searchParams.get("maxPrice") ?? ""}
             onChange={(e) => setParamDebounced("maxPrice", e.target.value)}
             placeholder="Any"
-            className={`w-28 ${inputClassName}`}
+            className={`w-full sm:w-28 ${inputClassName}`}
           />
         </label>
 
@@ -117,18 +117,20 @@ export function CarFilters() {
           label="Pick-up date"
           value={startDate}
           onChange={(value) => setParam("startDate", value)}
+          className="w-full sm:w-auto"
         />
         <CompactDateField
           label="Return date"
           value={endDate}
           min={startDate || undefined}
           onChange={(value) => setParam("endDate", value)}
+          className="w-full sm:w-auto"
         />
 
         <button
           type="button"
           onClick={() => router.replace(pathname, { scroll: false })}
-          className="text-sm text-gray-500 underline"
+          className="self-start text-sm text-gray-500 underline sm:self-auto"
         >
           Reset
         </button>

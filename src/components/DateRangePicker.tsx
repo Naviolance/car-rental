@@ -81,8 +81,8 @@ export function DateRangePicker({
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex flex-wrap items-end gap-3">
-        <label className="flex flex-1 flex-col gap-1 text-sm">
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
+        <label className="flex min-w-0 flex-col gap-1 text-sm sm:flex-1">
           Pick-up date
           {/* Same fix as the hero search form: hide the browser's own
               picker indicator and open it from our own icon instead, so
