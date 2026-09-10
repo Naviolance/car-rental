@@ -7,6 +7,17 @@ import { prisma } from "@/lib/prisma";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
+  // Auth.js only trusts the request's Host header automatically in dev,
+  // or in production on Vercel/Cloudflare Pages (they set VERCEL/CF_PAGES
+  // themselves). Any other production host — a VPS, Railway, `next start`
+  // — needs this explicitly, or every auth() call logs an UntrustedHost
+  // error and callback/redirect URLs silently fail to build. This trusts
+  // the same header passwordReset.ts already builds its reset link from,
+  // so it's not a new trust boundary, just an explicit one: safe as long
+  // as whatever sits in front of this app (Vercel, a real reverse proxy)
+  // sets that header from the actual request rather than passing through
+  // unchecked client input.
+  trustHost: true,
   // Credentials sign-in can't use database sessions (the adapter has no
   // way to persist a session for a provider it doesn't manage), so the
   // whole app runs on encrypted JWT cookies instead. Google sign-in still
