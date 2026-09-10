@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { motion } from "motion/react";
 import type { Car } from "@/generated/prisma/client";
@@ -38,14 +39,13 @@ export function CarCard({
         href={`/cars/${car.id}${queryString ? `?${queryString}` : ""}`}
         className="group flex h-full flex-col overflow-hidden rounded-lg border border-mist bg-white transition-shadow hover:shadow-lg"
       >
-        <div className="h-44 w-full overflow-hidden">
-          {/* eslint-disable-next-line @next/next/no-img-element -- external
-              hotlinked seed images; swapping to next/image once cars come from
-              Supabase Storage uploads (roadmap step 6) rather than Unsplash URLs */}
-          <img
+        <div className="relative h-44 w-full overflow-hidden">
+          <Image
             src={car.imageUrl}
             alt={`${car.make} ${car.model}`}
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="object-cover transition-transform duration-300 group-hover:scale-110"
           />
         </div>
         <div className="flex flex-1 flex-col gap-1 p-4">

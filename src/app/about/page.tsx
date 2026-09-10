@@ -1,6 +1,29 @@
+import { unstable_cache } from "next/cache";
 import Link from "next/link";
 import { Check, X } from "@phosphor-icons/react/dist/ssr";
 import { prisma } from "@/lib/prisma";
+
+// Nav (in the root layout, present on every route) calls auth(), which
+// reads cookies — a Dynamic API — so this route can never be a static
+// shell as a whole: that's decided above this page, not by anything here.
+// A page-level `revalidate` export can't override that, so instead this
+// caches just the actual expensive part (the two DB aggregates), which is
+// identical for every visitor regardless of who's signed in.
+const getAboutStats = unstable_cache(
+  async () => {
+    const [carCount, reviewStats] = await Promise.all([
+      prisma.car.count({ where: { isActive: true } }),
+      prisma.review.aggregate({ _avg: { rating: true }, _count: { rating: true } }),
+    ]);
+    return {
+      carCount,
+      avgRating: reviewStats._avg.rating ?? 0,
+      reviewCount: reviewStats._count.rating,
+    };
+  },
+  ["about-stats"],
+  { revalidate: 300 }
+);
 
 // The site's whole voice, from the footer's own comment on down, has
 // been "real functionality, no fabricated marketing claims" — no
@@ -10,12 +33,7 @@ import { prisma } from "@/lib/prisma";
 // portfolio piece, with real numbers pulled from the database rather
 // than invented ones.
 export default async function AboutPage() {
-  const [carCount, reviewStats] = await Promise.all([
-    prisma.car.count({ where: { isActive: true } }),
-    prisma.review.aggregate({ _avg: { rating: true }, _count: { rating: true } }),
-  ]);
-  const avgRating = reviewStats._avg.rating ?? 0;
-  const reviewCount = reviewStats._count.rating;
+  const { carCount, avgRating, reviewCount } = await getAboutStats();
 
   const stats = [
     { label: "Cars in the fleet", value: String(carCount) },

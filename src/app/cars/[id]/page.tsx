@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CaretLeft } from "@phosphor-icons/react/dist/ssr";
@@ -62,14 +63,16 @@ export default async function CarDetailPage({
           next; otherwise Dates is still the active step. */}
       <BookingSteps currentStep={dateRange.isValid ? 3 : 2} />
 
-      {/* eslint-disable-next-line @next/next/no-img-element -- external
-          placeholder image; swapping to next/image once cars come from
-          Supabase Storage uploads (roadmap step 6) */}
-      <img
-        src={car.imageUrl}
-        alt={`${car.make} ${car.model}`}
-        className="h-80 w-full rounded-lg object-cover"
-      />
+      <div className="relative h-80 w-full overflow-hidden rounded-lg">
+        <Image
+          src={car.imageUrl}
+          alt={`${car.make} ${car.model}`}
+          fill
+          sizes="(max-width: 768px) 100vw, 768px"
+          priority
+          className="object-cover"
+        />
+      </div>
 
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div>
