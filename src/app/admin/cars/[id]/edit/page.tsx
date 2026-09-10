@@ -17,7 +17,7 @@ export default async function EditCarPage({
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-xl font-semibold">
+      <h1 className="text-center text-xl font-semibold">
         Edit {car.make} {car.model}
       </h1>
       <CarForm
