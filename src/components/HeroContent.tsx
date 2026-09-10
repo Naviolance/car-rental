@@ -146,7 +146,7 @@ export function HeroContent() {
               it the obvious, single interaction instead of stumbling
               into segment-editing mode. */}
           <div className="flex gap-2">
-            <div className="relative">
+            <div className="relative min-w-0 flex-1">
               <input
                 ref={pickupRef}
                 type="date"
@@ -178,7 +178,7 @@ export function HeroContent() {
         <div className="flex flex-col gap-1 text-sm">
           Return
           <div className="flex gap-2">
-            <div className="relative">
+            <div className="relative min-w-0 flex-1">
               <input
                 ref={returnRef}
                 type="date"
