@@ -124,7 +124,7 @@ export function HeroContent() {
         method="get"
         className="mt-2 flex w-full max-w-3xl flex-wrap items-end justify-center gap-3 rounded-lg bg-white p-4 text-left text-charcoal shadow-xl"
       >
-        <label className="flex flex-col gap-1 text-sm">
+        <label className="flex w-full flex-col gap-1 text-sm sm:w-auto">
           Category
           <Dropdown
             name="category"
@@ -132,10 +132,10 @@ export function HeroContent() {
             options={CATEGORY_OPTIONS}
             value={category}
             onChange={setCategory}
-            className="w-32"
+            className="w-full sm:w-32"
           />
         </label>
-        <div className="flex flex-col gap-1 text-sm">
+        <div className="flex w-full flex-col gap-1 text-sm sm:w-auto">
           Pick-up
           {/* The native date input's own text-segment editing (click
               into it and each of mm/dd/yyyy highlights individually) is
@@ -175,7 +175,7 @@ export function HeroContent() {
             />
           </div>
         </div>
-        <div className="flex flex-col gap-1 text-sm">
+        <div className="flex w-full flex-col gap-1 text-sm sm:w-auto">
           Return
           <div className="flex flex-col gap-2 sm:flex-row">
             <div className="relative min-w-0 flex-1">
@@ -207,7 +207,7 @@ export function HeroContent() {
             />
           </div>
         </div>
-        <label className="flex flex-col gap-1 text-sm">
+        <label className="flex w-full flex-col gap-1 text-sm sm:w-auto">
           Driver&apos;s age
           {/* Not enforced anywhere yet — /cars and the booking flow
               don't read this. It's here so the widget matches a real
@@ -224,14 +224,14 @@ export function HeroContent() {
             value={driverAge}
             onChange={setDriverAge}
             placeholder="18+"
-            className="w-20"
+            className="w-full sm:w-20"
           />
         </label>
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.97 }}
           type="submit"
-          className="rounded bg-ember px-5 py-2.5 font-medium text-charcoal transition-colors hover:bg-rust hover:text-white"
+          className="w-full rounded bg-ember px-5 py-2.5 font-medium text-charcoal transition-colors hover:bg-rust hover:text-white sm:w-auto"
         >
           Search
         </motion.button>
