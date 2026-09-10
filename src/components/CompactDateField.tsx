@@ -23,9 +23,9 @@ export function CompactDateField({
   const ref = useRef<HTMLInputElement>(null);
 
   return (
-    <label className="flex flex-col gap-1 text-sm">
+    <label className="flex min-w-0 flex-col gap-1 text-sm">
       {label}
-      <div className="relative">
+      <div className="relative min-w-0">
         <input
           ref={ref}
           type="date"
