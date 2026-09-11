@@ -63,12 +63,14 @@ export function BookingSection({
           label="Pick-up date"
           value={startDateValue}
           onChange={(value) => setParam("startDate", value)}
+          className="w-full sm:w-auto"
         />
         <CompactDateField
           label="Return date"
           value={endDateValue}
           min={startDateValue || undefined}
           onChange={(value) => setParam("endDate", value)}
+          className="w-full sm:w-auto"
         />
         <label className="flex w-full flex-col gap-1 text-sm sm:w-auto">
           Driver&apos;s age

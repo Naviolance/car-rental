@@ -14,7 +14,14 @@ export function CompactDateField({
   value,
   onChange,
   min,
-  className = "",
+  // Defaults to a real width rather than "" — iOS Safari's native date
+  // input doesn't reliably shrink to fit an unconstrained flex parent
+  // (this is exactly what shipped broken on the booking page: a caller
+  // that forgot to pass this rendered the input at Safari's own
+  // preferred intrinsic width instead of the card's). A caller can still
+  // override it, but there's no longer an unconstrained default to fall
+  // into by omission.
+  className = "w-full sm:w-auto",
 }: {
   label: string;
   value: string;
@@ -27,7 +34,12 @@ export function CompactDateField({
   return (
     <label className={`flex min-w-0 flex-col gap-1 text-sm ${className}`}>
       {label}
-      <div className="relative min-w-0">
+      {/* overflow-hidden is a clipping safety net, not the primary fix —
+          if Safari ever paints this native control wider than the box
+          above assigns it, this keeps that contained instead of it
+          spilling into the page and reintroducing the horizontal
+          "wiggle" scroll. */}
+      <div className="relative min-w-0 overflow-hidden">
         <input
           ref={ref}
           type="date"
