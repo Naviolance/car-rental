@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { BookingStatus } from "@/generated/prisma/enums";
+import { isValidDriverAge } from "@/lib/driverAge";
 
 export type CreateBookingState =
   | { status: "idle" }
@@ -21,6 +22,7 @@ export async function createBooking(
   const carId = formData.get("carId");
   const startDateRaw = formData.get("startDate");
   const endDateRaw = formData.get("endDate");
+  const driverAgeRaw = formData.get("driverAge");
 
   if (
     typeof carId !== "string" ||
@@ -29,6 +31,17 @@ export async function createBooking(
   ) {
     return { status: "error", message: "Missing booking details." };
   }
+
+  // Independent of the dropdown the form renders — a direct POST can
+  // skip it entirely, so this is the real gate, same reasoning as the
+  // date checks below.
+  if (!isValidDriverAge(driverAgeRaw)) {
+    return {
+      status: "error",
+      message: "Enter a valid driver's age (18 or older).",
+    };
+  }
+  const driverAge = Number(driverAgeRaw);
 
   const startDate = new Date(startDateRaw);
   const endDate = new Date(endDateRaw);
@@ -93,6 +106,7 @@ export async function createBooking(
           endDate,
           totalPrice,
           status: BookingStatus.PENDING,
+          driverAge,
         },
       });
     });

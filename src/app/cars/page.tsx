@@ -10,8 +10,10 @@ import {
   BookingStatus,
 } from "@/generated/prisma/enums";
 import type { Prisma } from "@/generated/prisma/client";
-import { parseDateRange, dateRangeQueryString } from "@/lib/dateRangeParams";
+import { parseDateRange } from "@/lib/dateRangeParams";
+import { toDateString } from "@/lib/dateOnly";
 import { parsePage, totalPagesFor, PAGE_SIZE } from "@/lib/pagination";
+import { isValidDriverAge } from "@/lib/driverAge";
 import { Pagination } from "@/components/Pagination";
 import { getReviewStats } from "@/lib/reviewStats";
 
@@ -22,6 +24,7 @@ type SearchParams = {
   maxPrice?: string;
   startDate?: string;
   endDate?: string;
+  driverAge?: string;
   page?: string;
 };
 
@@ -54,9 +57,23 @@ export default async function CarsPage({
   // wherever they're accessed through this same reference, which
   // destructuring them out immediately would throw away.
   const dateRange = parseDateRange(params.startDate, params.endDate);
-  const dateQueryString = dateRange.isValid
-    ? dateRangeQueryString(dateRange.startDate, dateRange.endDate)
-    : "";
+  const driverAge = isValidDriverAge(params.driverAge)
+    ? params.driverAge
+    : undefined;
+
+  // No car in this fleet actually carries an age restriction, so this
+  // never narrows the `where` clause below — filtering on it would be
+  // inventing a constraint that doesn't exist in the data. It's still
+  // worth carrying forward: the detail page's booking form requires it,
+  // so forwarding it here is what saves a visitor from re-entering it
+  // after already answering it on the search form.
+  const forwardedParams = new URLSearchParams();
+  if (dateRange.isValid) {
+    forwardedParams.set("startDate", toDateString(dateRange.startDate));
+    forwardedParams.set("endDate", toDateString(dateRange.endDate));
+  }
+  if (driverAge) forwardedParams.set("driverAge", driverAge);
+  const dateQueryString = forwardedParams.toString();
 
   const where: Prisma.CarWhereInput = {
     isActive: true,

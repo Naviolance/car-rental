@@ -37,6 +37,13 @@ export function CarFinderWizard({ userName }: { userName?: string | null }) {
   const [category, setCategory] = useState<CarCategory | null>(null);
   const [startDate, setStartDate] = useState("");
   const [days, setDays] = useState(3);
+
+  // Same timezone/hydration reasoning as the isOpen effect above: default
+  // to today only after mount, not during the render that produces the
+  // initial HTML.
+  useEffect(() => {
+    setStartDate(toDateString(new Date()));
+  }, []);
   const [transmission, setTransmission] = useState<Transmission | "">("");
   const [fuelType, setFuelType] = useState<FuelType | "">("");
 

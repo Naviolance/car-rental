@@ -146,6 +146,11 @@ model Booking {
   // next month, this booking's price shouldn't retroactively change.
   totalPrice Decimal       @db.Decimal(10, 2)
   status     BookingStatus @default(PENDING)
+  // Nullable only because bookings created before this field existed
+  // have no value to backfill — every new booking is required to supply
+  // one (enforced in createBooking, not here) and it's never blank going
+  // forward.
+  driverAge  Int?
 
   // Restrict: a car with existing bookings can't be deleted outright,
   // preserving booking history. Cars get archived, not deleted.

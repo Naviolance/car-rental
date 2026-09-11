@@ -1,12 +1,13 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { MotionConfig, motion, type Variants } from "motion/react";
 import { CalendarBlank } from "@phosphor-icons/react";
 import { CarCategory } from "@/generated/prisma/enums";
 import { inputClassName, datePlaceholderClassName } from "@/lib/formStyles";
 import { toDateString } from "@/lib/dateOnly";
+import { AGE_OPTIONS } from "@/lib/driverAge";
 import { Dropdown } from "@/components/Dropdown";
 
 // Parent only orchestrates timing (staggerChildren) — it has no visual
@@ -34,11 +35,6 @@ const TIME_SLOTS = Array.from({ length: 33 }, (_, i) => {
   const value = `${String(hours24).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
   const label = `${hours12}:${String(minutes).padStart(2, "0")} ${period}`;
   return { value, label, totalMinutes };
-});
-
-const AGE_OPTIONS = Array.from({ length: 63 }, (_, i) => {
-  const age = String(18 + i);
-  return { value: age, label: age };
 });
 
 const CATEGORY_OPTIONS = [
@@ -76,6 +72,18 @@ export function HeroContent() {
   const [returnDate, setReturnDate] = useState("");
   const [returnTime, setReturnTime] = useState("10:00");
   const [driverAge, setDriverAge] = useState("");
+
+  // Defaults pick-up to today, but only after mount: the server and a
+  // visitor's browser can be in different timezones, so computing
+  // "today" during the render that produces the initial HTML risks the
+  // client hydrating with a different date than the server sent. Starting
+  // blank (what the server actually rendered) and filling it in
+  // immediately after mount avoids that mismatch entirely. Return date
+  // stays user-chosen — defaulting it too would mean guessing a rental
+  // length for them.
+  useEffect(() => {
+    setPickupDate(toDateString(new Date()));
+  }, []);
 
   // Picking today's date can leave the currently-selected time slot in
   // the past (e.g. the "10:00 AM" default, at 2 PM) — bump it forward to
@@ -209,14 +217,14 @@ export function HeroContent() {
         </div>
         <label className="flex w-full flex-col gap-1 text-sm sm:w-auto">
           Driver&apos;s age
-          {/* Not enforced anywhere yet — /cars and the booking flow
-              don't read this. It's here so the widget matches a real
-              rental search (every major rental site gates on this),
-              with the actual 18+ validation left for when it's wired
-              into booking creation. Every listed option is already
-              18+, so there's no invalid choice to pick in the first
-              place — unlike the old free-number input's min={18},
-              which only warned after a smaller value was typed. */}
+          {/* Carried forward through /cars to the car detail page (same
+              mechanism as the date range) and required, alongside the
+              dates, before a booking can be confirmed — createBooking
+              re-validates it independently of this dropdown, same as
+              every other field here. Every listed option is already
+              >= MIN_DRIVER_AGE, so there's no invalid choice to pick in
+              the first place — unlike a free-number input's min={18},
+              which only warns after a smaller value was typed. */}
           <Dropdown
             name="driverAge"
             ariaLabel="Driver's age"

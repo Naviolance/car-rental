@@ -57,6 +57,7 @@ export default async function AdminBookingsPage({
                   {booking.startDate.toLocaleDateString()} –{" "}
                   {booking.endDate.toLocaleDateString()} · $
                   {Number(booking.totalPrice).toFixed(2)}
+                  {booking.driverAge && ` · Driver ${booking.driverAge}`}
                 </p>
               </div>
             </div>

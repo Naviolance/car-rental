@@ -7,6 +7,7 @@ import { auth } from "@/auth";
 import { BookingSteps } from "@/components/BookingSteps";
 import { BookingSection } from "@/components/BookingSection";
 import { parseDateRange } from "@/lib/dateRangeParams";
+import { isValidDriverAge } from "@/lib/driverAge";
 import { StarRating } from "@/components/StarRating";
 
 export default async function CarDetailPage({
@@ -14,11 +15,16 @@ export default async function CarDetailPage({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ startDate?: string; endDate?: string }>;
+  searchParams: Promise<{
+    startDate?: string;
+    endDate?: string;
+    driverAge?: string;
+  }>;
 }) {
   const { id } = await params;
-  const { startDate, endDate } = await searchParams;
+  const { startDate, endDate, driverAge } = await searchParams;
   const dateRange = parseDateRange(startDate, endDate);
+  const driverAgeValue = isValidDriverAge(driverAge) ? driverAge : "";
   const [car, session, reviews] = await Promise.all([
     prisma.car.findUnique({ where: { id } }),
     auth(),
@@ -123,10 +129,11 @@ export default async function CarDetailPage({
         carId={car.id}
         pricePerDay={Number(car.pricePerDay)}
         isSignedIn={Boolean(session?.user)}
-        isValid={dateRange.isValid}
+        isValid={dateRange.isValid && Boolean(driverAgeValue)}
         days={bookingDays}
         startDateValue={startDate ?? ""}
         endDateValue={endDate ?? ""}
+        driverAgeValue={driverAgeValue}
         startDateLabel={
           dateRange.isValid ? dateRange.startDate.toLocaleDateString() : ""
         }

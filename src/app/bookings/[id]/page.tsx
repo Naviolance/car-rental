@@ -122,6 +122,12 @@ export default async function BookingDetailPage({
               ${Number(booking.totalPrice).toFixed(2)}
             </p>
           </div>
+          <div>
+            <p className="text-gray-500">Driver&apos;s age</p>
+            {/* Bookings made before this field existed have no value to
+                show — null, not a missing-data bug. */}
+            <p className="font-medium">{booking.driverAge ?? "—"}</p>
+          </div>
         </div>
       </div>
 

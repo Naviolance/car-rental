@@ -9,10 +9,12 @@ export function BookingForm({
   carId,
   startDate,
   endDate,
+  driverAge,
 }: {
   carId: string;
   startDate: string;
   endDate: string;
+  driverAge: string;
 }) {
   const [state, formAction, isPending] = useActionState(
     createBooking,
@@ -24,6 +26,7 @@ export function BookingForm({
       <input type="hidden" name="carId" value={carId} />
       <input type="hidden" name="startDate" value={startDate} />
       <input type="hidden" name="endDate" value={endDate} />
+      <input type="hidden" name="driverAge" value={driverAge} />
 
       {state.status === "error" && (
         <p role="alert" className="rounded bg-red-50 px-3 py-2 text-sm text-red-700">

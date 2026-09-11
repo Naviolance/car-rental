@@ -4,6 +4,8 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { CalendarBlank } from "@phosphor-icons/react";
 import { CompactDateField } from "@/components/CompactDateField";
+import { Dropdown } from "@/components/Dropdown";
+import { AGE_OPTIONS } from "@/lib/driverAge";
 import { BookingForm } from "@/components/BookingForm";
 
 // Two plain date fields, not the full calendar grid the old version
@@ -20,6 +22,7 @@ export function BookingSection({
   days,
   startDateValue,
   endDateValue,
+  driverAgeValue,
   startDateLabel,
   endDateLabel,
 }: {
@@ -30,6 +33,7 @@ export function BookingSection({
   days: number;
   startDateValue: string;
   endDateValue: string;
+  driverAgeValue: string;
   startDateLabel: string;
   endDateLabel: string;
 }) {
@@ -37,7 +41,7 @@ export function BookingSection({
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  function setDate(key: "startDate" | "endDate", value: string) {
+  function setParam(key: "startDate" | "endDate" | "driverAge", value: string) {
     const params = new URLSearchParams(searchParams.toString());
     if (value) {
       params.set(key, value);
@@ -58,14 +62,26 @@ export function BookingSection({
         <CompactDateField
           label="Pick-up date"
           value={startDateValue}
-          onChange={(value) => setDate("startDate", value)}
+          onChange={(value) => setParam("startDate", value)}
         />
         <CompactDateField
           label="Return date"
           value={endDateValue}
           min={startDateValue || undefined}
-          onChange={(value) => setDate("endDate", value)}
+          onChange={(value) => setParam("endDate", value)}
         />
+        <label className="flex w-full flex-col gap-1 text-sm sm:w-auto">
+          Driver&apos;s age
+          <Dropdown
+            name="driverAge"
+            ariaLabel="Driver's age"
+            options={AGE_OPTIONS}
+            value={driverAgeValue}
+            onChange={(value) => setParam("driverAge", value)}
+            placeholder="18+"
+            className="w-full sm:w-20"
+          />
+        </label>
       </div>
 
       {isValid ? (
@@ -84,6 +100,7 @@ export function BookingSection({
               carId={carId}
               startDate={startDateValue}
               endDate={endDateValue}
+              driverAge={driverAgeValue}
             />
           ) : (
             <Link
@@ -95,7 +112,9 @@ export function BookingSection({
           )}
         </>
       ) : (
-        <p className="text-sm text-gray-500">Pick your dates to book this car.</p>
+        <p className="text-sm text-gray-500">
+          Pick your dates and driver&apos;s age to book this car.
+        </p>
       )}
     </div>
   );
