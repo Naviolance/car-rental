@@ -1,6 +1,8 @@
 import Link from "next/link";
 
-export const metadata = { title: "Privacy & cookies — Car Rental" };
+// The root layout's title template appends "— Car Rental" automatically —
+// this only needs the page-specific part, or it'd double up.
+export const metadata = { title: "Privacy & cookies" };
 
 // Same "real functionality, no fabricated claims" rule the About page
 // follows — this lists what the site actually stores in a visitor's

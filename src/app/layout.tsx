@@ -15,9 +15,28 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const title = "Car Rental";
+const description =
+  "Browse the fleet, pick your dates, and book by the day — no hidden fees. A full, working portfolio demo, not a real rental business.";
+
 export const metadata: Metadata = {
-  title: "Car Rental",
-  description: "A car rental booking site.",
+  // Needed so Next.js can turn opengraph-image.tsx into an absolute URL —
+  // without this, a shared link's image tag would resolve to a relative
+  // path no external platform (Slack, iMessage, LinkedIn) can fetch.
+  metadataBase: new URL("https://car-rental-xi-lemon.vercel.app"),
+  title: { default: title, template: `%s — ${title}` },
+  description,
+  openGraph: {
+    title,
+    description,
+    siteName: title,
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+  },
 };
 
 export default function RootLayout({ children, modal }: LayoutProps<"/">) {
