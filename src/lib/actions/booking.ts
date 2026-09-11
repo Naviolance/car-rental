@@ -60,6 +60,11 @@ export async function createBooking(
   );
   const totalPrice = (Number(car.pricePerDay) * days).toFixed(2);
 
+  // redirect() works by throwing, so its call has to sit outside this
+  // try/catch — inside it, that throw would run straight into the catch
+  // block below instead of reaching Next.js.
+  let bookingId: string;
+
   try {
     // Wrapped in a transaction so the "is it free?" check and the actual
     // insert happen as one unit — without this, two people could both
@@ -92,7 +97,7 @@ export async function createBooking(
       });
     });
 
-    void booking;
+    bookingId = booking.id;
   } catch (error) {
     if (error instanceof Error && error.message === "UNAVAILABLE") {
       return {
@@ -104,5 +109,5 @@ export async function createBooking(
     throw error;
   }
 
-  redirect("/bookings?success=1");
+  redirect(`/bookings/${bookingId}?success=1`);
 }

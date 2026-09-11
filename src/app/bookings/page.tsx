@@ -3,19 +3,12 @@ import { redirect } from "next/navigation";
 import { CalendarBlank } from "@phosphor-icons/react/dist/ssr";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import type { BookingStatus } from "@/generated/prisma/enums";
 import { parsePage, totalPagesFor, PAGE_SIZE } from "@/lib/pagination";
+import { STATUS_STYLES } from "@/lib/bookingStatusStyles";
 import { Pagination } from "@/components/Pagination";
 import { ReviewForm } from "@/components/ReviewForm";
 import { EmptyState } from "@/components/EmptyState";
 import { StarRating } from "@/components/StarRating";
-
-const STATUS_STYLES: Record<BookingStatus, string> = {
-  PENDING: "bg-yellow-100 text-yellow-800",
-  CONFIRMED: "bg-green-100 text-green-800",
-  CANCELLED: "bg-gray-200 text-gray-600",
-  COMPLETED: "bg-blue-100 text-blue-800",
-};
 
 export default async function BookingsPage({
   searchParams,
