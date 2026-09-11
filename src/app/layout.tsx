@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
+import { CookieConsent } from "@/components/CookieConsent";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,6 +35,7 @@ export default function RootLayout({ children, modal }: LayoutProps<"/">) {
             /login navigation, where it overlays the sign-in form on top
             of whatever page is still rendered in `children` above. */}
         {modal}
+        <CookieConsent />
       </body>
     </html>
   );
