@@ -202,3 +202,9 @@ real rental business.
 [LinkedIn](https://www.linkedin.com/in/forsangam-weyegho-junior-priestly-965897236) ·
 [GitHub](https://github.com/Naviolance) ·
 forsangamjunior@gmail.com
+
+## License
+
+© 2026 Forsangam Weyegho Junior Priestly (JPFW Web Services). All rights reserved.
+
+This code is public so clients and employers can review my work. It is **not open source**: you may not copy, deploy, modify or sell it without my written permission. See [LICENSE](LICENSE).
