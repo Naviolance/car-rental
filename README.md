@@ -45,28 +45,28 @@ backed by a real relational schema for cars, bookings and reviews.
 ## Screenshots
 
 ### Homepage
-[SCREENSHOT: homepage]
+![Homepage](screenshots/home.png)
 
 ### Find-my-car search wizard
-[SCREENSHOT: find-my-car wizard]
+![Find-my-car wizard](screenshots/find-my-car.png)
 
 ### Fleet listing with filters
-[SCREENSHOT: fleet listing]
+![Fleet listing](screenshots/listing.png)
 
-### Car detail page with reviews
-[SCREENSHOT: car detail page]
+### Car detail page
+![Car detail page](screenshots/detail.png)
 
 ### Booking form
-[SCREENSHOT: booking form]
+![Booking form](screenshots/booking.png)
 
 ### Booking confirmation
-[SCREENSHOT: booking confirmation]
+![Booking confirmation](screenshots/confirmation.png)
 
 ### Admin — car management
-[SCREENSHOT: admin car management]
+![Admin car management](screenshots/admin-cars.png)
 
 ### Admin — booking management
-[SCREENSHOT: admin booking management]
+![Admin booking management](screenshots/admin-bookings.png)
 
 ## Tech stack
 

@@ -45,3 +45,6 @@ next-env.d.ts
 
 # claude code: personal/local plugin config, not shared with the team
 .claude/settings.local.json
+
+# Raw, unrenamed screenshots (only the renamed ones are used in the README)
+screenshots/Screenshot (*).png
